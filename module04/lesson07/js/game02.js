@@ -8,53 +8,56 @@ const getUserNumber = text => {
   }
 
   while (Number.isNaN(+userNumber)) {
-    alert('Вы ввели не число!');
-    userNumber = prompt(text);
+    userNumber = prompt('Вы ввели не число! Введите число:');
   }
 
   return parseInt(userNumber);
 };
 
 const guessNumber = () => {
-  const userNumber01 = getUserNumber('Введите первое число:');
-  const userNumber02 = getUserNumber('Введите второе число:');
+  let start = getUserNumber('Введите первое число:');
+  if (start === false) return;
 
-  if (userNumber01 === false || userNumber02 === false) {
-      return;
-  }
+  let end = getUserNumber('Введите второе число:');
+  if (end === false) return;
 
-  let resUserNumber01 = userNumber01 > userNumber02 ? userNumber02 : userNumber01;
-  let resUserNumber02 = userNumber02 < userNumber01 ? userNumber01 : userNumber02;
-  let numbersAmount = resUserNumber02 - resUserNumber01;
-  let userNumbers = [];
+  start > end && ([start, end] = [end, start]);
+  console.log(start);
+  console.log(end);
+  const numbersAmount = end - start;
+  const limitAttempts = numbersAmount / 100 * 30;
+  const userNumbers = [];
 
-  const randomNumber = Math.floor(Math.random() * (resUserNumber02 - resUserNumber01 + 1) + resUserNumber01);
+  const randomNumber = Math.floor(Math.random() * (end - start + 1) + start);
+  let userNumber = getUserNumber(`Программа загадала число от ${start} до ${end}. Введите число:`);
 
-  while (numbersAmount / 100 * 30 > userNumbers.length) {
-    let userNumber = getUserNumber(`Программа загадала число от ${resUserNumber01} до ${resUserNumber02}. Введите число:`);
+  while (userNumber !== null && limitAttempts > userNumbers.length && userNumber !== randomNumber) {
 
-    if (userNumber === null) {
-      break;
+    while (start > userNumber || userNumber > end) {
+      userNumber = getUserNumber('Ваше число за пределами загаданного диапазона! Введите число:');
+      if (userNumber === false) return;
     }
 
     if (userNumbers.includes(userNumber)) {
-      alert('Вы уже вводили это число!');
-      continue;
+      userNumber = getUserNumber('Вы уже вводили это число! Введите число:');
+      if (userNumber === false) return;
     }
 
     if (userNumber > randomNumber) {
       userNumbers.push(userNumber);
-      alert('Ваше число больше!');
-    } else if (userNumber < randomNumber) {
+      userNumber = getUserNumber('Ваше число больше! Введите число:');
+      if (userNumber === false) return;
+    }
+
+    if (userNumber < randomNumber) {
       userNumbers.push(userNumber);
-      alert('Ваше число меньше!');
-    } else {
-      alert('Вы угадали! Поздравляем!');
-      return;
+      userNumber = getUserNumber('Ваше число меньше! Введите число:');
+      if (userNumber === false) return;
     }
   }
 
-  alert('Ваши попытки закончились!');
+  userNumber === randomNumber && alert('Вы угадали! Поздравляем!');
+  limitAttempts < userNumbers.length && alert('Ваши попытки закончились!');
 };
 
 guessNumber();

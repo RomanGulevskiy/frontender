@@ -1,16 +1,18 @@
 'use strict';
 
-const getRandomIntArray = (len, min, max, parity) => {
-  let resMin = min > max ? max : min;
-  let resMax = max < min ? min : max;
-  let resArray = [];
+const getRandomIntArray = (len, min, max, parity = '') => {
+  const resArray = [];
+
+  min > max && ([min, max] = [max, min]);
 
   while (resArray.length < len) {
-    let tmpNum = Math.floor(Math.random() * (resMax - resMin + 1) + resMin);
+    let tmpNum = Math.floor(Math.random() * (max - min + 1) + min);
 
-    if (parity === 'odd' && tmpNum % 2 === 0) {
+    if (parity === '') {
       resArray.push(tmpNum);
-    } else if (parity === 'even' && tmpNum % 2 !== 0) {
+    }
+
+    if ((parity === 'even' && !(tmpNum % 2)) || (parity === 'odd' && tmpNum % 2)) {
       resArray.push(tmpNum);
     }
   }
@@ -18,4 +20,4 @@ const getRandomIntArray = (len, min, max, parity) => {
   return resArray;
 };
 
-console.log(getRandomIntArray(10, 100, -50, 'odd'));
+console.log(getRandomIntArray(99, 10, -10, 'odd'));

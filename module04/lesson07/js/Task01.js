@@ -1,7 +1,7 @@
 'use strict';
 
 const getRandomIntArray = len => {
-  const array = new Array(len).fill(undefined);
+  const array = new Array(len).fill(null);
   const min = 1;
   const max = 100;
 
